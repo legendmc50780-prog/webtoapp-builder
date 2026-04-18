@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>جمعية انوار العمارة </title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, system-ui, sans-serif;
+        }
+        body {
+            background: linear-gradient(145deg, #eef2f5 0%, #dae5ec 100%);
+            min-height: 100vh;
+            padding: 30px 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .card {
+            max-width: 650px;
+            width: 100%;
+            background: white;
+            border-radius: 2rem;
+            box-shadow: 0 20px 35px -10px rgba(0,0,0,0.25);
+            overflow: hidden;
+        }
+        .header {
+            background: #0f2f3a;
+            padding: 1.2rem;
+            text-align: center;
+            color: white;
+        }
+        .header h1 {
+            font-size: 1.7rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .badge {
+            background: #e6b422;
+            padding: 0.2rem 1rem;
+            border-radius: 40px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            color: #1e2f36;
+        }
+        .content {
+            padding: 1.6rem 1.8rem;
+        }
+        /* قسم الإضافة */
+        .add-section {
+            background: #f8fbfd;
+            border-radius: 1.5rem;
+            padding: 1rem;
+            margin-bottom: 1.8rem;
+            border: 1px solid #d9e6ed;
+        }
+        .add-row {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+        }
+        .add-row input {
+            flex: 3;
+            padding: 14px 16px;
+            font-size: 1rem;
+            border: 2px solid #d4e2ea;
+            border-radius: 60px;
+            outline: none;
+            font-weight: 600;
+            background: white;
+            font-family: monospace;
+            text-align: right;
+            direction: ltr;
+            /* استدعاء لوحة مفاتيح الأرقام */
+            inputmode: numeric;
+            -webkit-inputmode: numeric;
+        }
+        .add-row input:focus {
+            border-color: #e6b422;
+        }
+        .add-btn {
+            background: #1a5e6e;
+            border: none;
+            color: white;
+            font-weight: bold;
+            font-size: 1.6rem;
+            width: 58px;
+            height: 58px;
+            border-radius: 60px;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+        }
+        .add-btn:hover {
+            background: #0f454f;
+            transform: scale(0.96);
+        }
+        .history-list {
+            background: white;
+            border-radius: 1.2rem;
+            border: 1px solid #e0edf2;
+            max-height: 220px;
+            overflow-y: auto;
+        }
+        .history-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 16px;
+            border-bottom: 1px solid #ecf3f7;
+            font-weight: 500;
+            font-family: monospace;
+        }
+        .history-value {
+            font-weight: 800;
+            color: #1e4a5f;
+            font-size: 1rem;
+            direction: ltr;
+            display: inline-block;
+            font-family: monospace;
+        }
+        .delete-history {
+            background: none;
+            border: none;
+            font-size: 1rem;
+            cursor: pointer;
+            color: #b9845c;
+            font-weight: bold;
+            padding: 4px 10px;
+            border-radius: 40px;
+            transition: 0.2s;
+            font-family: inherit;
+        }
+        .delete-history:hover {
+            background: #fce4e4;
+            color: #b91c1c;
+        }
+        .total-goods {
+            background: #eef3f7;
+            padding: 12px 18px;
+            border-radius: 60px;
+            display: flex;
+            justify-content: space-between;
+            font-weight: 800;
+            font-size: 1.1rem;
+            margin-top: 14px;
+        }
+        /* خيارات الخصم والمدة */
+        .row-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 1.6rem;
+        }
+        .option-box {
+            flex: 1;
+            background: #f9fcfd;
+            padding: 0.7rem;
+            border-radius: 1.2rem;
+            border: 1px solid #deeef5;
+        }
+        .option-box label {
+            font-weight: 700;
+            display: block;
+            margin-bottom: 12px;
+            font-size: 0.85rem;
+            color: #2b6b7c;
+        }
+        .discount-group, .duration-group {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .discount-chip, .duration-chip {
+            background: #eef2f6;
+            padding: 8px 0;
+            text-align: center;
+            border-radius: 60px;
+            font-weight: bold;
+            cursor: pointer;
+            flex: 1;
+            transition: 0.2s;
+            border: 1px solid #cde0e8;
+            font-size: 0.85rem;
+        }
+        .discount-chip.active, .duration-chip.active-duration {
+            background: #1a4a5f;
+            color: white;
+            border-color: #1a4a5f;
+        }
+        /* النتائج */
+        .result-box {
+            background: #fefaf0;
+            border-radius: 1.8rem;
+            padding: 1.2rem;
+            text-align: center;
+            margin-top: 0.6rem;
+            border: 1px solid #f0e2c5;
+        }
+        .result-item {
+            margin: 12px 0;
+        }
+        .result-label {
+            font-size: 0.8rem;
+            color: #6f6f4a;
+            letter-spacing: 0.5px;
+        }
+        .result-value {
+            font-size: 2rem;
+            font-weight: 800;
+            background: white;
+            display: inline-block;
+            padding: 0.2rem 1.2rem;
+            border-radius: 60px;
+            margin-top: 5px;
+            color: #1e4a5f;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+            font-family: monospace;
+            direction: ltr;
+        }
+        .total-value {
+            color: #c47b2e;
+            background: #fff6e8;
+        }
+        .footnote {
+            font-size: 0.7rem;
+            text-align: center;
+            margin-top: 18px;
+            color: #6b8c99;
+        }
+        hr {
+            margin: 10px 0;
+            border: 0;
+            height: 1px;
+            background: #e0eef2;
+        }
+        .reset-btn {
+            background: #f0f3f6;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-right: 8px;
+            font-size: 0.75rem;
+        }
+        @media (max-width: 550px) {
+            .content { padding: 1rem; }
+            .result-value { font-size: 1.4rem; }
+            .add-btn { width: 50px; height: 50px; font-size: 1.4rem; }
+        }
+    </style>
+</head>
+<body>
+<div class="card">
+    <div class="header">
+        <h1>جمعية انوار العمارة<span class="badge">حساب الخصم </span></h1>
+        <div style="font-size: 0.7rem; margin-top: 5px;">Made by LEGEND</div>
+    </div>
+    <div class="content">
+        <!-- حقل الإضافة والسجل -->
+        <div class="add-section">
+            <div class="add-row">
+                <input type="text" id="amountInput" placeholder="مبلغ البضاعة (دينار عراقي)" value="" 
+                       inputmode="numeric" pattern="[0-9]*" 
+                       style="direction: ltr; text-align: right;">
+                <button id="plusButton" class="add-btn">+</button>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px;">
+                <span style="font-weight: 600; font-size: 0.8rem;">📋 سجل المبالغ المضافة:</span>
+                <button id="resetHistoryBtn" class="reset-btn" style="background:#e2e8f0;">🗑️ مسح الكل</button>
+            </div>
+            <div id="historyContainer" class="history-list">
+                <div style="padding: 15px; text-align: center; color: #8aa9b5;">لا توجد مبالغ مضافة</div>
+            </div>
+            <div class="total-goods">
+                <span>💰 إجمالي سلة البضائع:</span>
+                <span id="totalGoodsSpan" style="font-family: monospace; direction: ltr;">0 IQD</span>
+            </div>
+        </div>
+
+        <!-- خيارات الخصم والمدة -->
+        <div class="row-options">
+            <div class="option-box">
+                <label>🔻 نسبة الخصم</label>
+                <div class="discount-group" id="discountGroup">
+                    <div class="discount-chip" data-discount="5">5%</div>
+                    <div class="discount-chip" data-discount="7">7%</div>
+                    <div class="discount-chip" data-discount="12">12%</div>
+                </div>
+            </div>
+            <div class="option-box">
+                <label>📆 مدة التقسيط (شهر)</label>
+                <div class="duration-group" id="durationGroup">
+                    <div class="duration-chip" data-months="16">16 شهر</div>
+                    <div class="duration-chip" data-months="17">17 شهر</div>
+                    <div class="duration-chip" data-months="18">18 شهر</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- النتائج النهائية -->
+        <div class="result-box">
+            <div class="result-item">
+                <div class="result-label">القسط الشهري</div>
+                <div class="result-value" id="monthlyAmount">0 IQD</div>
+            </div>
+            <hr>
+            <div class="result-item">
+                <div class="result-label">المبلغ الكلي</div>
+                <div class="result-value total-value" id="totalPaidAmount">0 IQD</div>
+            </div>
+        </div>
+        <div class="footnote">
+            ⚡ يتم تقريب القسط الشهري لأعلى فئة من {250، 500، 1000} دينار عراقي، ثم يُضرب بعدد الأشهر.
+        </div>
+    </div>
+</div>
+
+<script>
+    (function() {
+        // عناصر DOM
+        const amountInput = document.getElementById('amountInput');
+        const plusBtn = document.getElementById('plusButton');
+        const historyContainer = document.getElementById('historyContainer');
+        const resetHistoryBtn = document.getElementById('resetHistoryBtn');
+        const totalGoodsSpan = document.getElementById('totalGoodsSpan');
+        const monthlySpan = document.getElementById('monthlyAmount');
+        const totalPaidSpan = document.getElementById('totalPaidAmount');
+
+        // أزرار الخصم والمدة
+        const discountChips = document.querySelectorAll('#discountGroup .discount-chip');
+        const durationChips = document.querySelectorAll('#durationGroup .duration-chip');
+
+        // المصفوفة التي تحتفظ بقيم البضاعة (أرقام فقط)
+        let itemsList = [];
+        let currentDiscountPercent = 12;
+        let currentMonths = 16;
+
+        // فئات التقريب لأعلى
+        const CURRENCY_STEPS = [250, 500, 1000];
+
+        // دالة التقريب لأعلى
+        function roundUpToCurrency(value) {
+            if (value <= 0) return 0;
+            for (let step of CURRENCY_STEPS) {
+                if (value <= step) return step;
+            }
+            const remainder = value % 250;
+            if (remainder === 0) return value;
+            return value + (250 - remainder);
+        }
+
+        // تنسيق الرقم بفواصل (للعرض فقط)
+        function formatNumberWithCommas(num) {
+            return Math.floor(num).toLocaleString('en-US');
+        }
+
+        // تنسيق الدينار الكامل
+        function formatIQD(num) {
+            let rounded = Math.floor(num);
+            return rounded.toLocaleString('en-US') + ' IQD';
+        }
+
+        // تحويل النص المفصول بفواصل إلى رقم
+        function parseFormattedNumber(str) {
+            if (!str) return NaN;
+            // إزالة كل الفواصل
+            let clean = str.replace(/,/g, '');
+            return parseFloat(clean);
+        }
+
+        // تحديث حقل الإدخال لعرض القيمة بفواصل أثناء الكتابة
+        function handleInputFormatting(e) {
+            let rawValue = e.target.value;
+            // السماح فقط بالأرقام والفواصل
+            let numericValue = parseFormattedNumber(rawValue);
+            if (!isNaN(numericValue) && numericValue !== '') {
+                let formatted = formatNumberWithCommas(numericValue);
+                e.target.value = formatted;
+            } else if (rawValue === '') {
+                // تركها فارغة
+            } else {
+                // إذا كان هناك أحرف غير مرغوبة، نحاول تنظيف
+                let cleaned = rawValue.replace(/[^0-9]/g, '');
+                if (cleaned === '') {
+                    e.target.value = '';
+                } else {
+                    let num = parseFloat(cleaned);
+                    if (!isNaN(num)) {
+                        e.target.value = formatNumberWithCommas(num);
+                    }
+                }
+            }
+        }
+
+        // الحصول على القيمة الرقمية من حقل الإدخال (بدون فواصل)
+        function getRawAmountFromInput() {
+            let val = amountInput.value;
+            if (!val) return NaN;
+            let clean = val.replace(/,/g, '');
+            return parseFloat(clean);
+        }
+
+        // إضافة مبلغ جديد
+        function addCurrentAmount() {
+            let rawValue = getRawAmountFromInput();
+            if (isNaN(rawValue) || rawValue <= 0) {
+                alert("الرجاء إدخال مبلغ صحيح (أكبر من 0)");
+                return;
+            }
+            let amountToAdd = Math.floor(rawValue);
+            itemsList.push(amountToAdd);
+            renderHistory();
+            amountInput.value = '';   // تفريغ الحقل بعد الإضافة
+            amountInput.focus();
+        }
+
+        // مسح كل السجل
+        function resetHistory() {
+            if (itemsList.length > 0 && confirm("هل تريد مسح جميع المبالغ المضافة؟")) {
+                itemsList = [];
+                renderHistory();
+                refreshCalculation();
+            }
+        }
+
+        // حساب إجمالي سلة المنتجات
+        function getTotalItemsPrice() {
+            let sum = 0;
+            for (let val of itemsList) {
+                let price = parseFloat(val);
+                if (isNaN(price)) price = 0;
+                sum += price;
+            }
+            return Math.floor(sum);
+        }
+
+        // الحساب الرئيسي
+        function refreshCalculation() {
+            let totalGoods = getTotalItemsPrice();
+            let discountValue = totalGoods * (currentDiscountPercent / 100);
+            let afterDiscount = totalGoods - discountValue;
+            afterDiscount = Math.floor(afterDiscount);
+            if (afterDiscount < 0) afterDiscount = 0;
+
+            let months = currentMonths;
+            let rawMonthly = afterDiscount / months;
+            let roundedMonthly = roundUpToCurrency(rawMonthly);
+            let totalPaid = roundedMonthly * months;
+
+            monthlySpan.innerText = formatIQD(roundedMonthly);
+            totalPaidSpan.innerText = formatIQD(totalPaid);
+        }
+
+        // عرض السجل
+        function renderHistory() {
+            if (!historyContainer) return;
+            if (itemsList.length === 0) {
+                historyContainer.innerHTML = '<div style="padding: 15px; text-align: center; color: #8aa9b5;">📭 لا توجد مبالغ مضافة</div>';
+                totalGoodsSpan.innerText = formatIQD(0);
+                return;
+            }
+
+            let html = '';
+            itemsList.forEach((value, index) => {
+                let numericVal = parseFloat(value);
+                if (isNaN(numericVal)) numericVal = 0;
+                let formattedVal = numericVal.toLocaleString('en-US');
+                html += `
+                    <div class="history-item">
+                        <span style="display: flex; gap: 10px; align-items: center;">
+                            <span style="background:#eef2f5; width:28px; height:28px; display:inline-flex; align-items:center; justify-content:center; border-radius:30px;">${index+1}</span>
+                            <span class="history-value">${formattedVal} IQD</span>
+                        </span>
+                        <button class="delete-history" data-index="${index}">✖ حذف</button>
+                    </div>
+                `;
+            });
+            historyContainer.innerHTML = html;
+            
+            document.querySelectorAll('.delete-history').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const idx = parseInt(btn.getAttribute('data-index'));
+                    if (!isNaN(idx) && idx >= 0 && idx < itemsList.length) {
+                        itemsList.splice(idx, 1);
+                        renderHistory();
+                        refreshCalculation();
+                    }
+                    e.stopPropagation();
+                });
+            });
+
+            let total = getTotalItemsPrice();
+            totalGoodsSpan.innerText = formatIQD(total);
+            refreshCalculation();
+        }
+
+        function fullUpdate() {
+            let total = getTotalItemsPrice();
+            totalGoodsSpan.innerText = formatIQD(total);
+            refreshCalculation();
+        }
+
+        // تفعيل الخيارات المرئية
+        function setActiveDiscount(percent) {
+            discountChips.forEach(chip => {
+                const val = parseInt(chip.getAttribute('data-discount'));
+                if (val === percent) chip.classList.add('active');
+                else chip.classList.remove('active');
+            });
+        }
+
+        function setActiveDuration(months) {
+            durationChips.forEach(chip => {
+                const val = parseInt(chip.getAttribute('data-months'));
+                if (val === months) chip.classList.add('active-duration');
+                else chip.classList.remove('active-duration');
+            });
+        }
+
+        // ربط الأحداث
+        function bindEvents() {
+            plusBtn.addEventListener('click', addCurrentAmount);
+            resetHistoryBtn.addEventListener('click', resetHistory);
+            
+            // تنسيق حقل الإدخال مع الفواصل أثناء الكتابة
+            amountInput.addEventListener('input', handleInputFormatting);
+            
+            amountInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') addCurrentAmount();
+            });
+
+            discountChips.forEach(chip => {
+                chip.addEventListener('click', () => {
+                    let discount = parseInt(chip.getAttribute('data-discount'));
+                    if (!isNaN(discount)) {
+                        currentDiscountPercent = discount;
+                        setActiveDiscount(discount);
+                        refreshCalculation();
+                    }
+                });
+            });
+
+            durationChips.forEach(chip => {
+                chip.addEventListener('click', () => {
+                    let months = parseInt(chip.getAttribute('data-months'));
+                    if (!isNaN(months) && (months === 16 || months === 17 || months === 18)) {
+                        currentMonths = months;
+                        setActiveDuration(months);
+                        refreshCalculation();
+                    }
+                });
+            });
+        }
+
+        // تهيئة
+        function init() {
+            itemsList = [];
+            currentDiscountPercent = 12;
+            currentMonths = 16;
+            amountInput.value = '';
+            setActiveDiscount(12);
+            setActiveDuration(16);
+            bindEvents();
+            renderHistory();
+            fullUpdate();
+        }
+
+        init();
+    })();
+</script>
+</body>
+</html>
